@@ -5,7 +5,7 @@ import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import AddNotesScreen from "./screens/AddNotesScreen";
 import HomeScreen from "./screens/HomeScreen";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity,Text } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { DetailsScreen } from "./screens/DetailsScreen";
 import { handleSignOut } from "./utils/functions";
@@ -41,7 +41,11 @@ export default function App() {
         />
 
         <Stack.Screen
-          options={{ headerShown: false }}
+          options={({ route, navigation }) => ({
+            title: "Add New Notes",
+            headerShown: true,
+            headerStyle: { backgroundColor: "darkorange" },
+          })}
           name="AddNotes"
           component={AddNotesScreen}
         />
@@ -69,9 +73,12 @@ export default function App() {
         <Stack.Screen
           name="Detail"
           component={DetailsScreen}
-          options={{
+          options={({ route, navigation }) => ({
+            title: "",
             headerShown: false,
-          }}
+            headerStyle: { backgroundColor: "darkorange" },
+            
+          })}
         />
 
         <Stack.Screen
