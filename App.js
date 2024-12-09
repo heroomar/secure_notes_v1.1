@@ -18,7 +18,7 @@ import React, { useEffect, useState } from "react";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  
+  const [SecKey, setSecKey] = useState(SecKey);
   
   return (
     <NavigationContainer>

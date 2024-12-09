@@ -10,7 +10,7 @@ import { auth, db } from "../firebase";
 // import { addToCart, SecKey } from "../utils/functions";
 
 const HomeScreen = ({ route }) => {
-  const [SecKey, setSecKey] = useState(SecKey);
+  
   
   const navigation = useNavigation();
   const [notes, setNotes] = useState([]);
@@ -59,26 +59,24 @@ const HomeScreen = ({ route }) => {
 
   useEffect(() => {
     // console.log(route.params?._SecKey)
-    if(route.params?._SecKey != undefined){
-      setSecKey(route.params?._SecKey);
-    }
-    setTimeout(() => {
-      console.log('----------',SecKey);
-      if (SecKey == '' || SecKey == undefined){
-        navigation.push("KeyScreen", {
-          SecKey: 'SecKey'
-        });
-      }
-    }, 5000);
+    // if(route.params?._SecKey != undefined){
+    //   setSecKey(route.params?._SecKey);
+    // }
+    // setTimeout(() => {
+    //   console.log('----------',SecKey);
+    //   if (SecKey == '' || SecKey == undefined){
+    //     navigation.push("KeyScreen", {
+    //       SecKey: 'SecKey'
+    //     });
+    //   }
+    // }, 5000);
     navigation.addListener('focus', () => {
-      
-      
       if (!Loading) fetchData();
     });
     // // console.log('fething data')
     // fetchData();
   }, []);
-
+ 
   // const _notes=[
   //   {name: 'note',text: 'text'},
   //   {name: 'note',text: 'text'},
