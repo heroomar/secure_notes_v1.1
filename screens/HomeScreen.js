@@ -7,15 +7,18 @@ import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 //Firebase
 import { doc, collection, getDocs, orderBy, query,getAll, deleteDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
-import { addToCart } from "../utils/functions";
+// import { addToCart, SecKey } from "../utils/functions";
 
-const HomeScreen = () => {
+const HomeScreen = ({ route }) => {
+  const [SecKey, setSecKey] = useState(SecKey);
+  
   const navigation = useNavigation();
   const [notes, setNotes] = useState([]);
   const [showCheckMark, setShowCheckMark] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [Id, setId] = useState(false);
   const [Loading, setLoading] = useState(false);
+  
 
   const transitionToDetailsScreen = (data) => {
     navigation.push("Detail", {
@@ -34,7 +37,7 @@ const HomeScreen = () => {
   };
 
   const fetchData = () => {
-    console.log('------------------');
+    // console.log('------------------');
     setLoading(true)
     const uid = auth.currentUser.uid;
         if (uid === null) return;
@@ -47,19 +50,32 @@ const HomeScreen = () => {
           id: doc.id,
         }));
         // // const refs = newData.map(id => querySnapshot.docs(`notes_data/${id}`))
-        // console.log(newData)
-        // // getAll(...refs).then(users => console.log(users))
+        // // console.log(newData)
+        // // getAll(...refs).then(users => // console.log(users))
         setNotes(newData);
       }
     );
   };
 
   useEffect(() => {
+    // console.log(route.params?._SecKey)
+    if(route.params?._SecKey != undefined){
+      setSecKey(route.params?._SecKey);
+    }
+    setTimeout(() => {
+      console.log('----------',SecKey);
+      if (SecKey == '' || SecKey == undefined){
+        navigation.push("KeyScreen", {
+          SecKey: 'SecKey'
+        });
+      }
+    }, 5000);
     navigation.addListener('focus', () => {
-      // console.log("reloaded");
+      
+      
       if (!Loading) fetchData();
     });
-    // console.log('fething data')
+    // // console.log('fething data')
     // fetchData();
   }, []);
 
@@ -99,20 +115,20 @@ const HomeScreen = () => {
     {
       (notes.length == 0)
       ?
-      <Text style={{ flex:1, backgroundColor: 'darkorange',fontSize: 20,textAlign: 'center',textAlignVertical: 'center' }} >Start Adding Notes...</Text>
+      <Text style={{ flex:1, backgroundColor: '#ed782f',fontSize: 20,textAlign: 'center',textAlignVertical: 'center' }} >Start Adding Notes...</Text>
       :
       <></>
     }
     <FlatList
       className="p-4 bg-background"
       data={notes}
-      style={{ backgroundColor: 'darkorange' }}
+      style={{ backgroundColor: '#ed782f' }}
       contentContainerStyle={{ rowGap: 20, paddingBottom: 60 }}
       renderItem={({ item }) => (
         <TouchableOpacity
           className="relative bg-secondary rounded-2xl overflow-hidden"
           onPress={() => transitionToDetailsScreen(item)}
-          style={{ backgroundColor: 'orange', borderColor: 'black',borderWidth: 1 }}
+          style={{ backgroundColor: '#dc8315', borderColor: 'black',borderWidth: 1 }}
         >
           {/* Add button */}
           <TouchableOpacity

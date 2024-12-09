@@ -33,6 +33,8 @@ const LoginScreen = () => {
   const [password, setPassword] = useState("");
   const [image, setImage] = useState(null);
 
+  
+
   const navigation = useNavigation();
   const storage = getStorage();
 
@@ -51,7 +53,7 @@ const LoginScreen = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // console.log(user)
+        // // console.log(user)
         // User is signed in, see docs for a list of available properties
         navigation.navigate("Home");
       }
@@ -65,7 +67,7 @@ const LoginScreen = () => {
       .then((userCredentials) => {
         const user = userCredentials.user;
         // uploadDataToFirestore(user);
-        console.log(userCredentials)
+        // console.log(userCredentials)
       })
       .catch((error) => alert(error.message));
   };
@@ -119,7 +121,7 @@ const LoginScreen = () => {
   const loginUser = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((res) => {
-        console.log(res)
+        // console.log(res)
       })
       .catch((error) => alert(error.message));
   };
@@ -128,7 +130,7 @@ const LoginScreen = () => {
     <KeyboardAvoidingView
       className="justify-center items-center flex-1 bg-background"
       behavior="padding"
-      style={{ backgroundColor: 'darkorange' }}
+      style={{ backgroundColor: '#b76d11' }}
     >
       <View className="w-full items-center gap-5 p-10">
         <TouchableOpacity

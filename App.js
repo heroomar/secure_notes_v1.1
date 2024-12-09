@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
+import KeyScreen from "./screens/KeyScreen";
 import AddNotesScreen from "./screens/AddNotesScreen";
 import HomeScreen from "./screens/HomeScreen";
 import { TouchableOpacity,Text } from "react-native";
@@ -21,7 +22,7 @@ export default function App() {
   
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="Splash">
         <Stack.Screen
           options={{ headerShown: false }}
           name="Splash"
@@ -41,10 +42,16 @@ export default function App() {
         />
 
         <Stack.Screen
+          options={{ headerShown: true }}
+          name="KeyScreen"
+          component={KeyScreen}
+        />
+
+        <Stack.Screen
           options={({ route, navigation }) => ({
             title: "Add New Notes",
             headerShown: true,
-            headerStyle: { backgroundColor: "darkorange" },
+            headerStyle: { backgroundColor: "#b76d11" },
           })}
           name="AddNotes"
           component={AddNotesScreen}
@@ -56,16 +63,25 @@ export default function App() {
           options={({ route, navigation }) => ({
             title: "",
             headerShown: true,
-            headerStyle: { backgroundColor: "darkorange" },
+            headerStyle: { backgroundColor: "#b76d11" },
             headerRight: () => (
-              <TouchableOpacity onPress={() => navigation.push("AddNotes")}>
+              <>
+              <TouchableOpacity style={{ marginRight: 80 }} onPress={() => navigation.push("KeyScreen", { SecKey: "SecKey"}) }>
+                  <Ionicons name="lock-closed-outline" size={24} color="black" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.push("AddNotes")}>
                 <Ionicons name="add-outline" size={28} color="black" />
               </TouchableOpacity>
+              </>
+              
             ),
             headerLeft: () => (
-              <TouchableOpacity onPress={() => handleSignOut(navigation)}>
-                <Ionicons name="log-out-outline" size={24} color="black" />
-              </TouchableOpacity>
+              <>
+                
+                <TouchableOpacity onPress={() => handleSignOut(navigation)}>
+                  <Ionicons name="log-out-outline" size={24} color="black" />
+                </TouchableOpacity>
+              </>
             ),
           })}
         />
@@ -76,7 +92,7 @@ export default function App() {
           options={({ route, navigation }) => ({
             title: "",
             headerShown: false,
-            headerStyle: { backgroundColor: "darkorange" },
+            headerStyle: { backgroundColor: "#b76d11" },
             
           })}
         />

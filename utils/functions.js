@@ -2,6 +2,7 @@ import { db, auth } from "../firebase";
 import { collection, addDoc } from "firebase/firestore";
 import { signOut } from "firebase/auth";
 
+
 const addToCart = (coffee) => {
   const uid = auth.currentUser.uid;
   if (uid === null) return;
@@ -11,22 +12,11 @@ const addToCart = (coffee) => {
       coffee: coffee,
     });
   } catch (error) {
-    console.log(error, "Something went wrong");
+    // console.log(error, "Something went wrong");
   }
 };
 
-const addNewNotes = (data) => {
-  const uid = auth.currentUser.uid;
-  if (uid === null) return;
-
-  try {
-    addDoc(collection(db, "users", uid, "notes"), {
-      data: data,
-    });
-  } catch (error) {
-    console.log(error, "Something went wrong");
-  }
-};
+const SecKey = "";
 
 const handleSignOut = (navigation) => {
   signOut(auth)
@@ -36,4 +26,4 @@ const handleSignOut = (navigation) => {
     .catch((error) => alert(error.message));
 };
 
-export { handleSignOut, addToCart };
+export { handleSignOut, addToCart, SecKey };

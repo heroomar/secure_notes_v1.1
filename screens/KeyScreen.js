@@ -5,7 +5,6 @@ import {
     TouchableOpacity,
     Image,
     KeyboardAvoidingView,
-    ToastAndroid
   } from "react-native";
   import React, { useEffect, useState } from "react";
   import * as ImagePicker from "expo-image-picker";
@@ -15,8 +14,7 @@ import {
   
   // Firebase
   import { auth, db } from "../firebase";
-  import { setDoc, doc, collection, addDoc } from "firebase/firestore";
-  
+  import { setDoc, doc } from "firebase/firestore";
   import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
@@ -30,48 +28,22 @@ import {
   } from "firebase/storage";
   //
   
-  const AddNotesScreen = () => {
-    
+  const KeyScreen = ({ route }) => {
+    const { SecKey } = route.params;
+    const [_SecKey, _setSecKey] = useState(SecKey);
     const navigation = useNavigation();
-    const storage = getStorage();
-    const [name, setName] = useState("");
-    
-    
-    // useEffect(() => {
-     
-    // }, []);
-  
-    const save = () => {
-        const uid = auth.currentUser.uid;
-        if (uid === null) return;
-        // // console.log(uid)
-        if (name.length < 3){
-          alert("Minimum length of notes title is 3 charaters");
-          return;
-        }
-        try {
-          addDoc(collection(db, "users", uid,"notes"), {
-            name: name,
-          }).then((res)=>{
-            // console.log(res)
-            // alert("Create new notes Successfully");
-            ToastAndroid.show('Notes created successfully!', ToastAndroid.SHORT);
-            navigation.navigate("Home");
-          }).catch((error)=>{
-            console.error(error.message)
-          });
-          
-        } catch (error) {
-          // console.log(error, "Something went wrong");
-        }
+    // console.log([SecKey])
+
+    const saveKey = () => {
+      navigation.navigate("Home",{ _SecKey: _SecKey });
     };
+   
   
-    
     return (
       <KeyboardAvoidingView
         className="justify-center items-center flex-1 bg-background"
         behavior="padding"
-        style={{ backgroundColor: '#ed782f' }}
+        style={{ backgroundColor: '#b76d11' }}
       >
         <View className="w-full items-center gap-5 p-10">
           <TouchableOpacity
@@ -80,26 +52,30 @@ import {
             
               <Image
                 source = {require('../logo.png')}
-                className="w-full h-full"   
+                className="w-full h-full"
               />
+            
+              {/* <Ionicons name="image-outline" size={28} color="gray" /> */}
             
           </TouchableOpacity>
   
           <TextInput
-            placeholder="Name"
+            placeholder="Secret Key"
             placeholderTextColor="gray"
-            value={name}
-            style={{ backgroundColor: 'white', color: 'black' }}
-            onChangeText={(text) => setName(text)}
+            value={_SecKey}
+            style={{ backgroundColor: 'white',color: 'black' }}
+            onChangeText={(text) => _setSecKey(text)}
             className="w-full justify-center items-center h-14 rounded-3xl border-white border-[1px] text-white px-4"
           />
   
+          
+  
           <TouchableOpacity
-            onPress={save}
+            onPress={saveKey}
             className="  w-full justify-center items-center h-14 rounded-3xl border-accent border-[1px]"
             style={{ backgroundColor: 'black' }}
           >
-          <Text className="text-white text-lg font-semibold">Add Now</Text>
+          <Text className="text-white text-lg font-semibold">Save</Text>
           </TouchableOpacity>
 
           
@@ -109,5 +85,5 @@ import {
     );
   };
   
-  export default AddNotesScreen;
+  export default KeyScreen;
   

@@ -18,8 +18,8 @@ export const DetailsScreen = ({ route }) => {
   const [showCheckMark, setShowCheckMark] = useState(false);
   const [TextNotes, setTextNotes] = useState(data.text);
 
-  console.log("loaded")
-  console.log(data)
+  // console.log("loaded")
+  // console.log(data)
 
   const saveNotes = (text) => {
         const uid = auth.currentUser.uid;
@@ -36,7 +36,7 @@ export const DetailsScreen = ({ route }) => {
             text: text,
             time: Date.now()
           }).then((res)=>{
-            // console.log(res)
+            // // console.log(res)
             // alert("Create new notes Successfully");
             updateDoc(doc(db, "users", uid, "notes", data.id),
               {
@@ -52,7 +52,7 @@ export const DetailsScreen = ({ route }) => {
           });
           
         } catch (error) {
-          console.log(error, "Something went wrong");
+          // console.log(error, "Something went wrong");
         }
   };
 
@@ -66,8 +66,8 @@ const handleChange = (text) => {
   
 
   return (
-    <View className="" style={{ flex: 1,backgroundColor: 'orange',marginTop: 1 }} >
-      <View style={{ backgroundColor: "darkorange", height: 80,elevation: 5,flexDirection: 'row',justifyContent:'space-between',paddingLeft: 10,paddingRight: 10,paddingTop: 30,paddingBottom: 10  }} >
+    <View className="" style={{ flex: 1,backgroundColor: 'orange' }} >
+      <View style={{ backgroundColor: "#b76d11", height: 80,elevation: 5,flexDirection: 'row',justifyContent:'space-between',paddingLeft: 10,paddingRight: 10,paddingTop: 30,paddingBottom: 10  }} >
               <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginTop: 5 }} >
                 <Ionicons name="arrow-back" size={24} color="black" />
               </TouchableOpacity>
