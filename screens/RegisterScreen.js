@@ -37,7 +37,6 @@ import {
     const storage = getStorage();
   
     const pickImage = async () => {
-      // No permissions request is necessary for launching the image library
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         quality: 1,
@@ -51,8 +50,6 @@ import {
     useEffect(() => {
       const unsubscribe = onAuthStateChanged(auth, (user) => {
         if (user) {
-          // console.log(user)
-          // User is signed in, see docs for a list of available properties
           navigation.navigate("Home");
         }
       });
@@ -64,8 +61,6 @@ import {
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredentials) => {
           const user = userCredentials.user;
-          // uploadDataToFirestore(user);
-          // console.log(userCredentials)
         })
         .catch((error) => alert(error.message));
     };
@@ -76,50 +71,12 @@ import {
       const storageRef = ref(storage, `users/${user.uid}/${filename}`);
       const uploadTask = uploadBytesResumable(storageRef, imageBlob);
   
-      // try {
-      //   // Listen for state changes, errors, and completion of the upload.
-      //   uploadTask.on(
-      //     "state_changed",
-      //     (snapshot) => {
-      //       // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-      //       const progress =
-      //         (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      //     },
-      //     (error) => {
-      //       // A full list of error codes is available at https://firebase.google.com/docs/storage/web/handle-errors
-      //       setError(error);
-      //       switch (error.code) {
-      //         case "storage/unauthorized":
-      //           // User doesn't have permission to access the object
-      //           break;
-      //         case "storage/canceled":
-      //           // User canceled the upload
-      //           break;
-      //         case "storage/unknown":
-      //           // Unknown error occurred, inspect error.serverResponse
-      //           break;
-      //       }
-      //     },
-      //     () => {
-      //       getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-      //         //Succesfully added image
-      //         setDoc(doc(db, "users", user.uid), {
-      //           createdAt: new Date(),
-      //           email: email,
-      //           image: downloadURL,
-      //         });
-      //       });
-      //     }
-      //   );
-      // } catch (e) {
-      //   console.error("Error adding document: ", e);
-      // }
+      
     };
   
     const loginUser = () => {
       signInWithEmailAndPassword(auth, email, password)
         .then((res) => {
-          // console.log(res)
         })
         .catch((error) => alert(error.message));
     };
@@ -142,9 +99,7 @@ import {
                 className="w-full h-full"
                 
               />
-            
-              {/* <Ionicons name="image-outline" size={28} color="gray" /> */}
-            
+           
           </TouchableOpacity>
   
           <TextInput

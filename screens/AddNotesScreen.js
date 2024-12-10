@@ -35,11 +35,6 @@ import {
     const navigation = useNavigation();
     const storage = getStorage();
     const [name, setName] = useState("");
-    
-    
-    // useEffect(() => {
-     
-    // }, []);
   
     const save = () => {
         const uid = auth.currentUser.uid;
@@ -53,8 +48,7 @@ import {
           addDoc(collection(db, "users", uid,"notes"), {
             name: name,
           }).then((res)=>{
-            // console.log(res)
-            // alert("Create new notes Successfully");
+
             ToastAndroid.show('Notes created successfully!', ToastAndroid.SHORT);
             navigation.navigate("Home");
           }).catch((error)=>{
@@ -62,7 +56,7 @@ import {
           });
           
         } catch (error) {
-          // console.log(error, "Something went wrong");
+
         }
     };
   

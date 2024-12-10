@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity, Image, Alert, Modal, StyleSheet,Pressable } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, TextInput, Image, Alert, Modal, StyleSheet,Pressable } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
@@ -7,7 +7,7 @@ import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 //Firebase
 import { doc, collection, getDocs, orderBy, query,getAll, deleteDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
-// import { addToCart, SecKey } from "../utils/functions";
+// import { addToCart } from "../utils/functions";
 
 const HomeScreen = ({ route }) => {
   
@@ -16,13 +16,27 @@ const HomeScreen = ({ route }) => {
   const [notes, setNotes] = useState([]);
   const [showCheckMark, setShowCheckMark] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [Keymodal, setKeyModal] = useState(true);
   const [Id, setId] = useState(false);
   const [Loading, setLoading] = useState(false);
+  const [SecKey, setSecKey] = useState("");
+
+   
+    const open = (encoded,salt) => {
+        const textToChars = text => text.split('').map(c => c.charCodeAt(0));
+        const applySaltToChar = code => textToChars(salt).reduce((a,b) => a ^ b, code);
+        return encoded.match(/.{1,2}/g)
+          .map(hex => parseInt(hex, 16))
+          .map(applySaltToChar)
+          .map(charCode => String.fromCharCode(charCode))
+          .join('');
+    }
   
 
   const transitionToDetailsScreen = (data) => {
     navigation.push("Detail", {
       data: data,
+      SecKey: SecKey
     });
   };
 
@@ -37,7 +51,7 @@ const HomeScreen = ({ route }) => {
   };
 
   const fetchData = () => {
-    // console.log('------------------');
+    
     setLoading(true)
     const uid = auth.currentUser.uid;
         if (uid === null) return;
@@ -49,39 +63,44 @@ const HomeScreen = ({ route }) => {
           ...doc.data(),
           id: doc.id,
         }));
-        // // const refs = newData.map(id => querySnapshot.docs(`notes_data/${id}`))
-        // // console.log(newData)
-        // // getAll(...refs).then(users => // console.log(users))
+        for (let i = 0; i < newData.length; i++) {
+          if(newData[i]['text'] != undefined && newData[i]['text'].length > 0){
+          let open_text = open(newData[i]['text'],SecKey);
+          if(open_text.includes("incryptwithkey")){
+            newData[i]['text'] = open_text.replace("incryptwithkey","");
+          } else {
+            newData[i]['text'] = "invalid Password";
+          }
+          }
+        }
+        
         setNotes(newData);
       }
     );
   };
 
   useEffect(() => {
-    // console.log(route.params?._SecKey)
-    // if(route.params?._SecKey != undefined){
-    //   setSecKey(route.params?._SecKey);
-    // }
-    // setTimeout(() => {
-    //   console.log('----------',SecKey);
-    //   if (SecKey == '' || SecKey == undefined){
-    //     navigation.push("KeyScreen", {
-    //       SecKey: 'SecKey'
-    //     });
-    //   }
-    // }, 5000);
-    navigation.addListener('focus', () => {
-      if (!Loading) fetchData();
+    
+    navigation.addListener('focus', () => { 
+          if (!Loading) fetchData();
     });
-    // // console.log('fething data')
-    // fetchData();
+
+    navigation.setOptions({ 
+      headerRight: () => (
+        <>
+        <TouchableOpacity style={{ marginRight: 80 }} onPress={() => { setKeyModal(true) }}>
+            <Ionicons name="lock-closed-outline" size={24} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.push("AddNotes")}>
+          <Ionicons name="add-outline" size={28} color="black" />
+        </TouchableOpacity>
+        </>
+        
+      ),
+     })
+    
   }, []);
- 
-  // const _notes=[
-  //   {name: 'note',text: 'text'},
-  //   {name: 'note',text: 'text'},
-  //   {name: 'note',text: 'text'},
-  // ];
+
 
   return (
     <>
@@ -105,6 +124,36 @@ const HomeScreen = ({ route }) => {
                   style={[styles.button, styles.buttonClose]}
                   onPress={() => setModalVisible(!modalVisible)}>
                   <Text style={styles.textStyle}>No</Text>
+                </Pressable>
+              </View>
+            </View>
+          </View>
+        </Modal>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={Keymodal}
+          onRequestClose={() => {
+            setKeyModal(!Keymodal);
+          }}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Enter Secret Key</Text>
+              <TextInput
+                placeholder="Secret Key"
+                placeholderTextColor="gray"
+                value={SecKey}
+                secureTextEntry={true}
+                style={{ backgroundColor: 'white',color: 'black',borderColor: 'grey', marginBottom: 10 }}
+                onChangeText={(text) => setSecKey(text)}
+                className="w-full justify-center items-center h-14 rounded-3xl border-white border-[1px] text-white px-4"
+              />
+              <View style={{ flexDirection: 'row', }} >
+                
+                <Pressable
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => {setKeyModal(false); fetchData(); }}>
+                  <Text style={styles.textStyle}>Save</Text>
                 </Pressable>
               </View>
             </View>
@@ -134,23 +183,16 @@ const HomeScreen = ({ route }) => {
             onPress={() => {
               setModalVisible(true);
               setId(item.id)
-              // confirm("Are you want to delete this Note?")
-              // addToCart(item);
-              // setShowCheckMark(true);
-              // setTimeout(() => setShowCheckMark(false), 2000);
+              
             }}
           >
             
-              {/* <Ionicons name="checkmark" size={24} color="white" /> */}
-            
+              
               <Ionicons name="trash-outline" size={24} color="white" />
             
           </TouchableOpacity>
 
-          {/* <Image
-            source = {require('../logo.png')}
-            style={{ height: 50, width: 50 }}
-          /> */}
+          
 
           <View className="p-4 gap-y-3">
             <View className="flex flex-row justify-between items-center">
@@ -158,9 +200,8 @@ const HomeScreen = ({ route }) => {
                 {item.name}
               </Text>
 
-              {/* Price */}
+              
               <View className="flex-row gap-x-1">
-                {/* <Text className="text-accent text-lg">$</Text> */}
                 
               </View>
             </View>
@@ -177,18 +218,14 @@ const HomeScreen = ({ route }) => {
     </>
   );
 };
-// ListHeaderComponent={() => (
-//   <Text className="text-4xl font-semibold text-white">
-//     Find the best coffee for you
-//   </Text>
-// )}
+
 
 
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: 'center',
-    // alignItems: 'center',
+    
   },
   modalView: {
     margin: 20,

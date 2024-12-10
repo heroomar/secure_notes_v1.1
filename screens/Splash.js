@@ -15,12 +15,6 @@ import { auth } from "../firebase";
 const Splash = () => {
 
   const navigation = useNavigation();
- 
-  // useEffect(() => {
-  //   // setTimeout(()=>{
-  //   //   navigation.navigate("Login");  
-  //   // },5000);
-  // }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {

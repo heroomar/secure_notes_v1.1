@@ -9,7 +9,7 @@ import { setDoc, doc, collection, addDoc,updateDoc } from "firebase/firestore";
 const sizes = ["Small", "Medium", "Large"];
 
 export const DetailsScreen = ({ route }) => {
-  const { data } = route.params;
+  const { data,SecKey } = route.params;
   if(data.text == undefined){
     data.text='';
   }
@@ -20,6 +20,20 @@ export const DetailsScreen = ({ route }) => {
 
   // console.log("loaded")
   // console.log(data)
+
+
+  const close = (text,salt) => {
+    const textToChars = text => text.split('').map(c => c.charCodeAt(0));
+    const byteHex = n => ("0" + Number(n).toString(16)).substr(-2);
+    const applySaltToChar = code => textToChars(salt).reduce((a,b) => a ^ b, code);
+        text = "incryptwithkey"+text;
+        return text.split('')
+          .map(textToChars)
+          .map(applySaltToChar)
+          .map(byteHex)
+          .join('');
+    }
+        
 
   const saveNotes = (text) => {
         const uid = auth.currentUser.uid;
@@ -33,14 +47,14 @@ export const DetailsScreen = ({ route }) => {
           addDoc(collection(db, "notes_data"), {
             id: data.id,
             uid: uid, 
-            text: text,
+            text: close(text,SecKey),
             time: Date.now()
           }).then((res)=>{
             // // console.log(res)
             // alert("Create new notes Successfully");
             updateDoc(doc(db, "users", uid, "notes", data.id),
               {
-                text: text
+                text: close(text,SecKey)
               }).then(()=>{
               ToastAndroid.show('Notes Saved successfully!', ToastAndroid.SHORT);
               navigation.navigate("Home");
@@ -81,7 +95,7 @@ const handleChange = (text) => {
       </View>
       <ScrollView  >
       <ImageBackground source={require('../nodepad_c.jpg')} style={{ flex: 1,width: '100%' }} resizeMode="repeat"  >
-
+      
       <TextInput
           className="px-2"
           style={{ fontSize: 20,lineHeight: 32,height: 2000,textAlignVertical: 'top' }}

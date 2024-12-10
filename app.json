@@ -1,18 +1,15 @@
 {
   "expo": {
-    "name": "livestream-app",
-    "slug": "livestream-app",
+    "name": "Secure Notes",
+    "slug": "secure-notes",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
-    },
+    
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
@@ -20,8 +17,7 @@
       },
       "permissions": [
         "android.permission.RECORD_AUDIO"
-      ],
-      "package": "com.dramahd82.secure_notes"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -34,11 +30,6 @@
           "cameraPermission": "The app wants to access your camera"
         }
       ]
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "c8978c99-cc95-4a19-bd2a-1a9097812b2f"
-      }
-    }
+    ]
   }
 }
