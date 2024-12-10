@@ -2,7 +2,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-![image1](https://github.com/heroomar/secure_notes_v1.1/sc.png)
+![image1](https://github.com/heroomar/secure_notes_v1.1/_sc.png)
 
 It is a fully functional Notes app created, using React Native and Firebase. While being styled with TailwindCSS.
 
